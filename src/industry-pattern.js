@@ -16,9 +16,9 @@ function match({ args, fn, pattern, name, bind_to }) {
   let pass, value
 
   if (Array.isArray(pattern)) {
-    pass = matchOr({ args, pattern })
+    pass = matchOr({ args: merged, pattern })
   } else {
-    pass = matchAnd({ args, pattern })
+    pass = matchAnd({ args: merged, pattern })
   }
 
   if (pass) {
@@ -35,11 +35,10 @@ function matchAnd({ args, pattern }) {
   for (let arg in pattern) {
     let a = args[arg]
     let p = pattern[arg]
-    let match = (
-      matchType({ arg: a, type: p }) ||
-      matchFn({ arg: a, fn: p }) ||
-      a == p
-    )
+    let match = matchType({ arg: a, type: p })
+    if (match == undefined) {
+      match = matchFn({ arg: a, fn: p }) || a == p
+    }
     if (!match) { pass = false }
   }
   return pass
@@ -51,7 +50,7 @@ function matchFn({ arg, fn }) {
 
 function matchOr({ args, pattern }) {
   let pass = false
-  pattern.each(p => {
+  pattern.forEach(p => {
     pass = pass || matchAnd({ args, pattern: p })
   })
   return pass
@@ -60,7 +59,8 @@ function matchOr({ args, pattern }) {
 function matchType({ arg, type }) {
   let types = [ String, Number, Boolean, Object, Array ]
   let index = types.indexOf(type)
-  return index > -1 && arg instanceof type
+  if (index == -1) { return undefined }
+  else return arg != undefined && arg.constructor == type
 }
 
 export let pattern = Class =>

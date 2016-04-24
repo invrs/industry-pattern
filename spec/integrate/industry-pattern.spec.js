@@ -43,10 +43,12 @@ describe("pattern", () => {
     makeTest()
     let a = { a: true, b: "b", whatev: true }
     let b = { b: 1, whatev: true }
+    let b2 = { b: true, whatev: true }
     let c = { whatev: true }
     let d = { d: "hello", whatev: true }
     expect(test().a(a).value).toEqual(a)
     expect(test().b(b).value).toEqual(b)
+    expect(test().b(b2).value).toEqual(b2)
     expect(test().c(c).value).toEqual(c)
     expect(test().d(d).value).toEqual(d)
   })
