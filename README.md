@@ -12,9 +12,9 @@ import { pattern } from "industry-pattern"
 import { standard_io } from "industry-standard-io"
 
 class Test {
-  beforeBeforeInit() {
+  init() {
     this.pattern({
-      hello: { noun: (v) => typeof v == "string"  }
+      hello: { noun: (v) => typeof v == "string" }
     })
   }
 

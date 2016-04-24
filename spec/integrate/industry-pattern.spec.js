@@ -4,8 +4,6 @@ import { instance } from "industry-instance"
 import { standard_io } from "industry-standard-io"
 import { pattern } from "../../"
 
-console.log(pattern)
-
 describe("pattern", () => {
   let test
 
@@ -16,17 +14,19 @@ describe("pattern", () => {
       .set("pattern", pattern)
       .set("standard_io", standard_io)
       .base(class {
-        beforeBeforeInit() {
+        init() {
           this.pattern({
             a: { a: true, b: "b" },
             b: { b: 1 },
-            c: {}
+            c: {},
+            d: { d: v => typeof v == "string" }
           })
         }
 
         a({ args }) { return args }
         b({ args }) { return args }
         c({ args }) { return args }
+        d({ args }) { return args }
       })
   }
 
@@ -36,10 +36,18 @@ describe("pattern", () => {
     expect(test().a({ a: true }).value).toBe(undefined)
     expect(test().b().value).toBe(undefined)
     expect(test().b({ b: 0 }).value).toBe(undefined)
+    expect(test().d({ d: 0 }).value).toBe(undefined)
   })
 
   it("passes", () => {
     makeTest()
-    console.log(test().a({ a: true, b: "b" }).value)
+    let a = { a: true, b: "b", whatev: true }
+    let b = { b: 1, whatev: true }
+    let c = { whatev: true }
+    let d = { d: "hello", whatev: true }
+    expect(test().a(a).value).toEqual(a)
+    expect(test().b(b).value).toEqual(b)
+    expect(test().c(c).value).toEqual(c)
+    expect(test().d(d).value).toEqual(d)
   })
 })
