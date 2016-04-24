@@ -13,16 +13,12 @@ function patch(patterns) {
 
 function match({ args, fn, pattern, name, bind_to }) {
   let merged = mergeObjects(args)
-  let pass = true
-  let value
+  let pass, value
 
-  for (let arg in pattern) {
-    let match = (
-      typeof pattern[arg] == "function" &&
-      !!pattern[arg](merged[arg])
-    )
-    match = match || merged[arg] == pattern[arg]
-    if (!match) { pass = false }
+  if (Array.isArray(pattern)) {
+    pass = matchOr({ args, pattern })
+  } else {
+    pass = matchAnd({ args, pattern })
   }
 
   if (pass) {
@@ -32,6 +28,39 @@ function match({ args, fn, pattern, name, bind_to }) {
   }
   
   return value
+}
+
+function matchAnd({ args, pattern }) {
+  let pass = true
+  for (let arg in pattern) {
+    let a = args[arg]
+    let p = pattern[arg]
+    let match = (
+      matchType({ arg: a, type: p }) ||
+      matchFn({ arg: a, fn: p }) ||
+      a == p
+    )
+    if (!match) { pass = false }
+  }
+  return pass
+}
+
+function matchFn({ arg, fn }) {
+  return typeof fn == "function" && !!fn(arg)
+}
+
+function matchOr({ args, pattern }) {
+  let pass = false
+  pattern.each(p => {
+    pass = pass || matchAnd({ args, pattern: p })
+  })
+  return pass
+}
+
+function matchType({ arg, type }) {
+  let types = [ String, Number, Boolean, Object, Array ]
+  let index = types.indexOf(type)
+  return index > -1 && arg instanceof type
 }
 
 export let pattern = Class =>

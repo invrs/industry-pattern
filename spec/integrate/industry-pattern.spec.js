@@ -16,8 +16,8 @@ describe("pattern", () => {
       .base(class {
         init() {
           this.pattern({
-            a: { a: true, b: "b" },
-            b: { b: 1 },
+            a: { a: Boolean, b: String },
+            b: [ { b: 1 }, { b: Boolean } ],
             c: {},
             d: { d: v => typeof v == "string" }
           })
