@@ -14,13 +14,17 @@ import { standard_io } from "industry-standard-io"
 class Test {
   init() {
     this.pattern({
-      hello: { noun: (v) => typeof v == "string" }
+      and: { a: Number, b: String, c: "c" },
+      or: [
+        { a: Number },
+        { b: 0 },
+        { c: c => !!c }
+      ]
     })
   }
 
-  hello({ noun }) {
-    return "hello ${noun}"
-  }
+  and({ a, b, c }) { return true }
+  or({ a, b, c }) { return true }
 }
 
 let test = factory(Test)
@@ -29,6 +33,12 @@ let test = factory(Test)
   .set("pattern", pattern)
   .set("standard_io", standard_io)
 
-test().hello({ noun: 123 })     // { value: undefined }
-test().hello({ noun: "world" }) // { value: "hello world" }
+test().and() // { value: undefined }
+test().and({ a: 0, b: "b" }) // { value: undefined }
+test().and({ a: 0, b: "b", c: "c" }) // { value: true }
+
+test().or() // { value: undefined }
+test().or({ a: 0, b: "b" }) // { value: undefined }
+test().or({ a: 0, b: 0 }) // { value: true }
+test().and({ c: true }) // { value: true }
 ```
