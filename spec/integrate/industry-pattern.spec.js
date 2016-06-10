@@ -35,12 +35,12 @@ describe("pattern", () => {
 
   it("doesn't pass", () => {
     makeTest()
-    expect(test().a().value).toBe(undefined)
-    expect(test().a({ a: true }).value).toBe(undefined)
-    expect(test().b().value).toBe(undefined)
-    expect(test().b({ b: 0 }).value).toBe(undefined)
-    expect(test().d({ d: 0 }).value).toBe(undefined)
-    expect(test().e({ e: 1 }).value).toBe(undefined)
+    expect(test().a().value).toEqual({})
+    expect(test().a({ a: true }).value).toEqual({})
+    expect(test().b().value).toEqual({})
+    expect(test().b({ b: 0 }).value).toEqual({})
+    expect(test().d({ d: 0 }).value).toEqual({})
+    expect(test().e({ e: 1 }).value).toEqual({})
   })
 
   it("passes", () => {
