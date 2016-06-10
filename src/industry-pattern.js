@@ -15,7 +15,9 @@ function match({ args, fn, pattern, name, bind_to }) {
   let merged = mergeObjects(args)
   let pass, value
 
-  if (Array.isArray(pattern)) {
+  if (typeof pattern == "function") {
+    pass = matchFn({ arg: merged, fn: pattern })
+  } else if (Array.isArray(pattern)) {
     pass = matchOr({ args: merged, pattern })
   } else {
     pass = matchAnd({ args: merged, pattern })

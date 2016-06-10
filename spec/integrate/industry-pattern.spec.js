@@ -19,7 +19,8 @@ describe("pattern", () => {
             a: { a: Boolean, b: String },
             b: [ { b: 1 }, { b: Boolean } ],
             c: {},
-            d: { d: v => typeof v == "string" }
+            d: { d: v => typeof v == "string" },
+            e: ({ e }) => { return e == "hello" },
           })
         }
 
@@ -27,6 +28,8 @@ describe("pattern", () => {
         b({ args }) { return args }
         c({ args }) { return args }
         d({ args }) { return args }
+        e({ args }) { return args }
+        f({ args }) { return args }
       })
   }
 
@@ -37,6 +40,7 @@ describe("pattern", () => {
     expect(test().b().value).toBe(undefined)
     expect(test().b({ b: 0 }).value).toBe(undefined)
     expect(test().d({ d: 0 }).value).toBe(undefined)
+    expect(test().e({ e: 1 }).value).toBe(undefined)
   })
 
   it("passes", () => {
@@ -46,10 +50,12 @@ describe("pattern", () => {
     let b2 = { b: true, whatev: true }
     let c = { whatev: true }
     let d = { d: "hello", whatev: true }
+    let e = { e: "hello" }
     expect(test().a(a).value).toEqual(a)
     expect(test().b(b).value).toEqual(b)
     expect(test().b(b2).value).toEqual(b2)
     expect(test().c(c).value).toEqual(c)
     expect(test().d(d).value).toEqual(d)
+    expect(test().e(e).value).toEqual(e)
   })
 })
