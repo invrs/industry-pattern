@@ -26,7 +26,7 @@ function match({ args, fn, pattern, name, bind_to }) {
   if (pass) {
     value = fn.bind(bind_to)(...args)
   } else {
-    value = returnObject()
+    value = returnObject({ value: {} })
   }
   
   return value
