@@ -77,11 +77,10 @@ export let pattern = Class =>
       super.beforeFactoryOnce()
     }
 
-    pattern(patterns) {
-      patch.bind(this)(patterns)
-    }
-
-    static pattern(patterns) {
-      patch.bind(this)(patterns)
+    beforeInit() {
+      if (this.pattern) {
+        patch.bind(this)(this.pattern())
+      }
+      super.beforeInit()
     }
   }

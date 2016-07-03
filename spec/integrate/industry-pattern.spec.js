@@ -14,14 +14,14 @@ describe("pattern", () => {
       .set("pattern", pattern)
       .set("standard_io", standard_io)
       .base(class {
-        init() {
-          this.pattern({
+        pattern() {
+          return {
             a: { a: Boolean, b: String },
             b: [ { b: 1 }, { b: Boolean } ],
             c: {},
             d: { d: v => typeof v == "string" },
-            e: ({ e }) => { return e == "hello" },
-          })
+            e: ({ e }) => { return e == "hello" }
+          }
         }
 
         a({ args }) { return args }
